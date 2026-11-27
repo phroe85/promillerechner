@@ -1,4 +1,4 @@
-# Promille 2.3 – Modellbeschreibung und Grenzen
+# Promille 2.4 – Modellbeschreibung und Grenzen
 
 ## Modell
 Ethanolmasse = ml × Vol.-% / 100 × 0,789 g/ml. Eingabe gilt als Trinkbeginn, gleichmässige Zufuhr über die gespeicherte Trinkdauer. Verdauungstrakt mit Absorption erster Ordnung (separate Pools je Nahrungszustand), zentrales und peripheres Kompartiment, sättigbare Elimination aus dem zentralen Kompartiment. Konzentrationen in g/L werden durch 1,055 kg/L in g/kg (‰) umgerechnet.
@@ -19,3 +19,6 @@ Ein erster Plausibilitätsvergleich mit dem publizierten 45-g/75-kg-Szenario (B�
 
 ## Version 2.3
 Sitzungsgrenze lokal 07:00 Uhr; kein Zurücksetzen der PK-Zustände. Historische Median-Zeitreihe im 5-Minuten-Raster (Modell weiterhin 1-Minuten-Schritte), rollierende sieben Tage. Bieräquivalente mit fixer Referenz 500 ml / 5 Vol.-%, aus der erfassten Ethanolmasse; Division durch 7 bzw. 30, inklusive Tagen ohne Eintrag. Die Änderung der Shot-Standards betrifft nur neue Einträge; gespeicherte Mengen bleiben unverändert.
+
+## Version 2.4
+Keine Änderung des Berechnungsmodells. Nur Bedienung und PWA-Aktualisierung geändert.
