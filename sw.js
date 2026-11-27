@@ -1,8 +1,8 @@
 // Bei jedem Release BUILD und die Versionsparameter aller Assets gemeinsam erhöhen.
-const BUILD=24;
-const CACHE='promille01-v24-1';
+const BUILD=25;
+const CACHE='promille01-v25-1';
 const SHELL='./index.html';
-const ASSETS=['./model.js?v=24','./app.js?v=24','./worker.js?v=24','./manifest.webmanifest?v=24','./icon-192.png','./icon-512.png'];
+const ASSETS=['./model.js?v=25','./app.js?v=25','./worker.js?v=25','./manifest.webmanifest?v=25','./icon-192.png','./icon-512.png'];
 const assetURLs=new Set(ASSETS.map(p=>new URL(p,self.registration.scope).href));
 async function htmlBuild(response){
   const html=await response.clone().text();
@@ -13,7 +13,13 @@ self.addEventListener('install',event=>event.waitUntil((async()=>{
   const cache=await caches.open(CACHE);
   const response=await fetch(new Request(new URL(SHELL,self.registration.scope),{cache:'reload'}));
   if(!response.ok || await htmlBuild(response)!==BUILD) throw new Error('Release noch nicht vollständig verfügbar');
-  await cache.addAll(ASSETS.map(p=>new Request(new URL(p,self.registration.scope),{cache:'reload'})));
+  for(const p of ASSETS){
+    const req=new Request(new URL(p,self.registration.scope),{cache:'reload'}),res=await fetch(req);
+    if(!res.ok)throw new Error('Asset nicht verfügbar');
+    if(p.includes('.js?')){const code=await res.clone().text();let token=p.includes('model.js')?'BUILD=25':p.includes('app.js')?'PROMILLE_APP_BUILD=25':'PROMILLE_WORKER_BUILD=25';if(!code.includes(token))throw new Error('Asset-Version nicht vollständig verfügbar');}
+    if(p.includes('manifest.') && !(await res.clone().json()).name.includes('2.5'))throw new Error('Manifest-Version nicht vollständig verfügbar');
+    await cache.put(req,res);
+  }
   await cache.put(SHELL,response);
   await self.skipWaiting();
 })()));
