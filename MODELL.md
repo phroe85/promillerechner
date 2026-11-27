@@ -1,9 +1,9 @@
-# Promille 2.2 – Modellbeschreibung und Grenzen
+# Promille 2.3 – Modellbeschreibung und Grenzen
 
 ## Modell
 Ethanolmasse = ml × Vol.-% / 100 × 0,789 g/ml. Eingabe gilt als Trinkbeginn, gleichmässige Zufuhr über die gespeicherte Trinkdauer. Verdauungstrakt mit Absorption erster Ordnung (separate Pools je Nahrungszustand), zentrales und peripheres Kompartiment, sättigbare Elimination aus dem zentralen Kompartiment. Konzentrationen in g/L werden durch 1,055 kg/L in g/kg (‰) umgerechnet.
 
-512 deterministisch erzeugte Szenarien. P50 und P2,5/P97,5 für Konzentrationen pro Zeit und separat für die letzte absteigende Schwellenüberschreitung jeder Trajektorie. Nie erreichte Schwellen bleiben als solche markiert; wenn der Median sie nicht erreicht, aber der obere Bereich schon, wird das angezeigt. Die Schwelle für die rechnerische Null ist 0,01 ‰. Die Szenarien sind weder garantierte Minimal-/Maximalwerte noch validierte 95-%-Vorhersageintervalle. Rundung auf 10 Minuten. Bei nicht abgeschlossenem Modellhorizont explizite Warnung.
+512 deterministisch erzeugte Szenarien. P50 und P2,5/P97,5 für Konzentrationen pro Zeit und separat für die letzte absteigende Schwellenüberschreitung jeder Trajektorie. Nie erreichte Schwellen bleiben als solche markiert; in der Abbauprognose wird nur der Median angezeigt. Das Modellband bleibt in der aktuellen Kurve und bei den Konzentrationsschätzungen sichtbar. Die Schwelle für die rechnerische Null ist 0,01 ‰. Die Szenarien sind weder garantierte Minimal-/Maximalwerte noch validierte 95-%-Vorhersageintervalle. Rundung auf 10 Minuten. Bei nicht abgeschlossenem Modellhorizont explizite Warnung.
 
 ## Parameterherkunft
 - Watson et al. 1980, Körperwasser, https://pubmed.ncbi.nlm.nih.gov/6986753/ ; Verteilungsvolumen = Körperwasser / Blutwasseranteil (0,825 bzw. 0,838); Szenario-CV 10% bzw. 15%, begrenzt auf Faktor 0,55–1,65. Streuung angenähert.
@@ -16,3 +16,6 @@ Ethanolmasse = ml × Vol.-% / 100 × 0,789 g/ml. Eingabe gilt als Trinkbeginn, g
 Ein-Minuten-Schritte mit exakten Teilupdates für Zufuhr/Absorption und Austausch, begrenzter numerischer Elimination. Massenerhaltung, Nichtnegativität, Reproduzierbarkeit, 30-Sekunden-Konvergenz, Nahrungseffekt, Sitzungstrennung mit Restalkohol und lange Archivzeiträume: `node test-model.cjs`. 3-Getränke-Test: Massendifferenz < 1e-8 g; Peakänderung bei Halbierung des Zeitschritts ca. 0,005 ‰. Die Tests prüfen Implementierung, nicht klinische Genauigkeit.
 
 Ein erster Plausibilitätsvergleich mit dem publizierten 45-g/75-kg-Szenario (Büsker et al.) liefert für die Fläche unter der Median-Kurve (20 min Trinkdauer, Modellprofil Mann 35 J. 175 cm) ca. 2,92 g h/L nüchtern bzw. 1,77 g h/L nach Essen. Publizierte AUC0–10h: 3,83 bzw. 2,34 g h/L. Das sind nicht methodisch identische Kennwerte und Bedingungen. Die Abweichungen sind erheblich; keine Kalibrierung oder unabhängige klinische Validierung erfolgt. Vor einem Einsatz als medizinisches oder forensisches Werkzeug wären Originalmessreihen, abgestimmte Versuchsbedingungen und externe Validierung erforderlich. Die App bleibt eine unverbindliche Orientierung.
+
+## Version 2.3
+Sitzungsgrenze lokal 07:00 Uhr; kein Zurücksetzen der PK-Zustände. Historische Median-Zeitreihe im 5-Minuten-Raster (Modell weiterhin 1-Minuten-Schritte), rollierende sieben Tage. Bieräquivalente mit fixer Referenz 500 ml / 5 Vol.-%, aus der erfassten Ethanolmasse; Division durch 7 bzw. 30, inklusive Tagen ohne Eintrag. Die Änderung der Shot-Standards betrifft nur neue Einträge; gespeicherte Mengen bleiben unverändert.
